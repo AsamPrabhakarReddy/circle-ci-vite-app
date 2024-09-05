@@ -1,0 +1,47 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:14  # You can change this based on your stack
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Run Tests
+          command: npm test -- --passWithNoTests
+      - run:
+          name: Build Application
+          command: npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist  # Assuming the build artifacts are in the 'dist' directory
+
+  deploy_s3:
+    docker:
+      - image: circleci/python:3.7  # AWS CLI requires Python, you can adjust this
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo pip install awscli
+      - run:
+          name: Deploy to S3
+          command: |
+            aws s3 sync dist/ s3://circle-ci-vite-app --delete --acl public-read
+            echo "Deployment complete!"
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy_s3:
+          requires:
+            - build

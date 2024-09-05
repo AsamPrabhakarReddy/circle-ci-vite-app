@@ -15,6 +15,9 @@ jobs:
       - run:
           name: Build Application
           command: npm run build
+      - run:
+          name: Check for dist folder after build
+          command: ls -la  # Check the root directory for the dist folder
       - persist_to_workspace:
           root: .
           paths:
@@ -28,12 +31,12 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Check for dist folder before deploying
+          command: ls -la dist  # Check if dist folder exists and its contents
+      - run:
           name: Install AWS CLI
           command: |
             sudo pip install awscli
-      - run:
-          name: Check for dist folder
-          command: ls -la dist  # Check if dist folder exists and its contents
       - run:
           name: Deploy to S3
           command: |

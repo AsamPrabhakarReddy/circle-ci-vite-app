@@ -18,7 +18,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - dist  # Assuming the build artifacts are in the 'dist' directory
+            - build  # Assuming the build artifacts are in the 'dist' directory
 
   deploy_s3:
     docker:

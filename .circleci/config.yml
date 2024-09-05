@@ -18,7 +18,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - build  # Assuming the build artifacts are in the 'dist' directory
+            - dist  # Assuming the build artifacts are in the 'dist' directory
 
   deploy_s3:
     docker:
@@ -31,6 +31,9 @@ jobs:
           name: Install AWS CLI
           command: |
             sudo pip install awscli
+      - run:
+          name: Check for dist folder
+          command: ls -la dist  # Check if dist folder exists and its contents
       - run:
           name: Deploy to S3
           command: |

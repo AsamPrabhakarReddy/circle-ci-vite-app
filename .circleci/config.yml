@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/node:14  # You can change this based on your stack
+      - image: circleci/node:18  # Upgrading to Node 18 for full ES12 support
     steps:
       - checkout
       - run:
